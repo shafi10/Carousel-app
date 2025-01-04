@@ -3,7 +3,7 @@ import { Dashboard } from "../components";
 
 export default function HomePage() {
   return (
-    <Page title="Default temp" fullWidth>
+    <Page fullWidth>
       <Dashboard />
     </Page>
   );

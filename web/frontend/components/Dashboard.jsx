@@ -1,12 +1,18 @@
 import React from "react";
 import { Spinners } from "./index";
 import { useShopQuery } from "../hooks";
-import { Banner } from "@shopify/polaris";
+import { Banner, BlockStack } from "@shopify/polaris";
+import FullScreenBar from "./Fullscreenbar";
+import { useState } from "react";
+import CollectionCarousel from "./CollectionCarousel";
+import ProductCarousel from "./ProductCarousel";
 
 export function Dashboard() {
   const { isLoading, isError } = useShopQuery({
     url: "/api/shop",
   });
+
+  const [navItem, setNavItem] = useState("collections");
 
   return (
     <>
@@ -23,7 +29,14 @@ export function Dashboard() {
             </Banner>
           ) : (
             <>
-              <div>Hello from app</div>
+              <BlockStack gap="500">
+                <FullScreenBar setNavItem={setNavItem} />
+                {navItem === "collections" ? (
+                  <CollectionCarousel />
+                ) : (
+                  <ProductCarousel />
+                )}
+              </BlockStack>
             </>
           )}
         </>
