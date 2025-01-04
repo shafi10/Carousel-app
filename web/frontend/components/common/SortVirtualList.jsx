@@ -9,15 +9,12 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { SortableItem } from "./SortableItem";
 
-export default function SortVirtualList() {
-  const [items, setItems] = useState([1, 2, 3]);
+export default function SortVirtualList({ items, handleDragEnd, children }) {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       // Require the mouse to move by 10 pixels before activating
@@ -37,19 +34,6 @@ export default function SortVirtualList() {
     })
   );
 
-  function handleDragEnd(event) {
-    const { active, over } = event;
-
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  }
-
   return (
     <DndContext
       sensors={sensors}
@@ -57,9 +41,7 @@ export default function SortVirtualList() {
       onDragEnd={handleDragEnd}
     >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        {items.map((id) => (
-          <SortableItem key={id} id={id} />
-        ))}
+        {children}
       </SortableContext>
     </DndContext>
   );

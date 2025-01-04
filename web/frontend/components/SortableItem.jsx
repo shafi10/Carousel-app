@@ -6,7 +6,7 @@ import { Icon, InlineStack } from "@shopify/polaris";
 
 export function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.id });
+    useSortable({ id: props?.item?.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -19,7 +19,7 @@ export function SortableItem(props) {
         <span className="my-draggable-item">
           <Icon source={DragHandleIcon} tone="base" />
         </span>
-        {props.id}
+        {props?.item?.title}
       </InlineStack>
     </div>
   );
