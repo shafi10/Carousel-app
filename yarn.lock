@@ -716,17 +716,12 @@
   resolved "https://registry.yarnpkg.com/@shopify/app-bridge-core/-/app-bridge-core-1.1.1.tgz#b8b16e7c4ba60d6d593a89f397e4abef9be6ef50"
   integrity sha512-kEnJUpkC9vDdmGMN3Mezq/FlDBqP+DFg/A1PFzqTW8FILu0wzFmz1aFk4Hxy6Y6ilceMmn8QXsyLA9DfaeH4jQ==
 
-"@shopify/app-bridge-react@^4.1.6":
-  version "4.1.6"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-react/-/app-bridge-react-4.1.6.tgz#9b845e9b53985cea480fef00123e29dd8619fabe"
-  integrity sha512-/Txi1L8ihV2ZK1w7Qh6+wsCITknQI7XS89nYYbqF7y2+hne446VM2DEsO7EVWz0MFc2tFA2IILjxdwVYSREYWw==
+"@shopify/app-bridge-react@^3.1.0":
+  version "3.7.10"
+  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-react/-/app-bridge-react-3.7.10.tgz#92059bbdfd88d711cc19b301e413f76d419aa22b"
+  integrity sha512-MIvsSnJ/YNd8iOdfUiPJK5hPSHhQRO8PKmjfwvNqpduQiBVrN5Y29AAYth9NFwP20QMxC92MIkyYWtENYXRoVA==
   dependencies:
-    "@shopify/app-bridge-types" "0.0.16"
-
-"@shopify/app-bridge-types@0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@shopify/app-bridge-types/-/app-bridge-types-0.0.16.tgz#69422615f96fcd636ff1df18dfeb877c8f0d32c6"
-  integrity sha512-UjKot8gOAv0qc9dxaooQv9fl1ob6zlupuOAgexj++H8cYQuAD8I6cbJ/whY4skqRXM/qZn68vuERq3eeDlByJg==
+    "@shopify/app-bridge" "^3.7.10"
 
 "@shopify/app-bridge-utils@^3.1.0":
   version "3.5.1"
