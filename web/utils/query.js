@@ -14,3 +14,10 @@ export const metafieldCreate = `mutation MetafieldsSet($metafields: [MetafieldsS
         }
       }
     }`;
+
+export const GetShopId = `
+    query GetShopId {
+        shop {
+            id
+        }
+    }`;
