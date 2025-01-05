@@ -28,7 +28,6 @@ export default function FullScreenBar({ setNavItem }) {
             Collections carousel
           </Button>
           <Button
-            variant="primary"
             onClick={() => {
               setNavItem("products");
             }}

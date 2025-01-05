@@ -9,15 +9,6 @@ const collectionQuery = (variables) => {
           id
           title
           handle
-          updatedAt
-          sortOrder
-          metafield(namespace: "bs-23-seo-app", key: "json-ld") {
-            value
-          }
-          seo{
-            title
-            description
-          }
           image {
             id
             url
