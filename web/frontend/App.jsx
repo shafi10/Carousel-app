@@ -9,6 +9,7 @@ import {
   PolarisProvider,
 } from "./components";
 import { ManagedUIContext } from "./contexts/ui.context";
+import { ToastContainer } from "./components/common/Toast";
 
 export default function App() {
   // Any .tsx or .jsx files in /pages will become a route
@@ -30,6 +31,7 @@ export default function App() {
                 ]}
               /> */}
               <Routes pages={pages} />
+              <ToastContainer />
             </QueryProvider>
           </AppBridgeProvider>
         </BrowserRouter>

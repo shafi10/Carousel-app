@@ -1,4 +1,5 @@
 import shopify from "../shopify.js";
+import { metafieldCreate } from "../utils/query.js";
 
 const collectionQuery = (variables) => {
   let query = `
@@ -83,4 +84,31 @@ export const getCollectionsController = async (req, res, next) => {
     );
     res.status(400).json({ err });
   }
+};
+
+export const creteCollections = async (req, res, next) => {
+  try {
+    let variables = {
+      metafields: [
+        {
+          key: "example_key",
+          namespace: "example_namespace",
+          ownerId: "gid://shopify/Shop/1",
+          type: "single_line_text_field",
+          value: "Example Value",
+        },
+      ],
+    };
+
+    const client = new shopify.api.clients.Graphql({
+      session: res.locals.shopify.session,
+    });
+
+    const response = await client.query({
+      data: {
+        query: metafieldCreate,
+        variables: variables,
+      },
+    });
+  } catch (error) {}
 };

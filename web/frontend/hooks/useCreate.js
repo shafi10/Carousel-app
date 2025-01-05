@@ -1,0 +1,44 @@
+import { useAuthenticatedFetch } from "./useAuthenticatedFetch";
+import { useMutation, useQueryClient } from "react-query";
+import { useUI } from "../contexts/ui.context";
+
+const useCreate = (apiEndpoint, apiKey) => {
+  const fetch = useAuthenticatedFetch();
+  const queryClient = useQueryClient();
+  const { setToggleToast } = useUI();
+  async function createStatus(status) {
+    return await fetch(apiEndpoint, {
+      method: "POST",
+      body: JSON.stringify(status),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  return useMutation((status) => createStatus(status), {
+    onSuccess: async (data, obj) => {
+      if (data?.status === 400) {
+        return setToggleToast({
+          active: true,
+          message: `Something went wrong`,
+        });
+      }
+      queryClient.invalidateQueries(apiKey);
+
+      setToggleToast({
+        active: true,
+        message: `Submit Successfully`,
+      });
+    },
+    onError: async () => {
+      setToggleToast({
+        active: true,
+        message: `Something went wrong`,
+      });
+    },
+    refetchOnWindowFocus: false,
+  });
+};
+
+export default useCreate;

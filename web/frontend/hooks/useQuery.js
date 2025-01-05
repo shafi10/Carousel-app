@@ -1,19 +1,19 @@
 import { useAuthenticatedFetch } from "./useAuthenticatedFetch";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
-// import { useUI } from "../contexts/ui.context";
 
-export const useCollectionsQuery = ({
+const useFetchQuery = ({
+  apiEndpoint,
   afterCursor,
   beforeCursor,
   limit,
+  apiKey,
   fetchInit = {},
 }) => {
   const authenticatedFetch = useAuthenticatedFetch();
-  const url = `/api/collection/list?afterCursor=${
-    afterCursor || ""
-  }&beforeCursor=${beforeCursor || ""}&limit=${limit}`;
-  //   const { modal } = useUI();
+  const url = `${apiEndpoint}?afterCursor=${afterCursor || ""}&beforeCursor=${
+    beforeCursor || ""
+  }&limit=${limit}`;
   const fetch = useMemo(() => {
     return async () => {
       const response = await authenticatedFetch(url, fetchInit);
@@ -21,10 +21,10 @@ export const useCollectionsQuery = ({
     };
   }, [url]);
 
-  return useQuery(["collectionList", afterCursor, beforeCursor], fetch, {
+  return useQuery([apiKey, afterCursor, beforeCursor, apiEndpoint], fetch, {
     onSuccess: (data) => {},
     refetchOnWindowFocus: false,
-    // enabled: !modal?.isOpen,
-    // enabled: Object.keys(shop).length === 0,
   });
 };
+
+export default useFetchQuery;

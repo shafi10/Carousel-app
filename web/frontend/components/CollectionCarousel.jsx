@@ -3,18 +3,18 @@ import {
   Text,
   BlockStack,
   InlineGrid,
-  Badge,
   Layout,
   Button,
   InlineStack,
 } from "@shopify/polaris";
 import React, { useState } from "react";
 import SortVirtualList from "./common/SortVirtualList";
-import { useCollectionsQuery } from "../hooks/useCollectionsQuery";
-import { PaginationButtons } from "./common/pagination";
+import useQuery from "../hooks/useQuery";
+import { PaginationButtons } from "./common/Pagination";
 import { SortableItem } from "./SortableItem";
 import Skeleton from "./common/Skeleton";
 import { templates } from "../utils/template";
+import useCreate from "../hooks/useCreate";
 
 export default function CollectionCarousel() {
   const [searchParams, setSearchParams] = useState({ after: "" });
@@ -25,11 +25,21 @@ export default function CollectionCarousel() {
   const [selectedItems, setSelectedItems] = useState([]);
   const afterCursor = searchParams?.after;
   const beforeCursor = searchParams?.before;
-  const { isError, isLoading, data } = useCollectionsQuery({
+
+  const { isError, isLoading, data } = useQuery({
+    apiEndpoint: "/api/collection/list",
     afterCursor,
     beforeCursor,
     limit: 3,
+    apiKey: "collectionList",
   });
+  console.log("🚀 ~ CollectionCarousel ~ data:", data);
+
+  const {
+    mutate: createCollections,
+    isError: isErrorForBulk,
+    isLoading: isCreateLoading,
+  } = useCreate("/api/collection/create-collection", "collectionList");
 
   const handleCheckboxChange = (item) => {
     setSelectedItems((prevSelected) =>
@@ -51,6 +61,15 @@ export default function CollectionCarousel() {
     setSelectedTemplate(data);
   };
 
+  const handleSubmit = (selectedItems, selectedTemplate) => {
+    const list = selectedItems.map((item) => item.handle);
+    const obj = {
+      template: selectedTemplate?.id,
+      collections: list,
+    };
+    createCollections(obj);
+  };
+
   return (
     <Card>
       <BlockStack gap="500">
@@ -58,13 +77,18 @@ export default function CollectionCarousel() {
           <Text variant="headingLg" as="p">
             Carousel Templates
           </Text>
-          <Button variant="primary" size="large" onClick={() => {}}>
+          <Button
+            variant="primary"
+            size="large"
+            onClick={() => handleSubmit(selectedItems, selectedTemplate)}
+          >
             Save Changes
           </Button>
         </InlineStack>
         <InlineGrid gap="400" columns={6}>
           {templates?.map((data) => (
             <div
+              key={data?.id}
               className={
                 data?.id === selectedTemplate?.id ? "badge active" : "badge"
               }
