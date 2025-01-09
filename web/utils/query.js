@@ -21,3 +21,11 @@ export const GetShopId = `
             id
         }
     }`;
+
+export const metafieldQuery = `query ShopMetafield($namespace: String!, $key: String!) {
+      shop {
+        shopMetafield: metafield(namespace: $namespace, key: $key) {
+          value
+        }
+      }
+    }`;

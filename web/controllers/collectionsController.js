@@ -1,5 +1,4 @@
 import shopify from "../shopify.js";
-import { GetShopId, metafieldCreate } from "../utils/query.js";
 
 const collectionQuery = (variables) => {
   let query = `
@@ -83,57 +82,5 @@ export const getCollectionsController = async (req, res, next) => {
       err
     );
     res.status(400).json({ err });
-  }
-};
-
-export const creteCollections = async (req, res, next) => {
-  try {
-    const collections = JSON.stringify(req.body);
-
-    const client = new shopify.api.clients.Graphql({
-      session: res.locals.shopify.session,
-    });
-
-    const response = await client.query({
-      data: GetShopId,
-    });
-
-    let variables = {
-      metafields: [
-        {
-          key: "quick_collection_carousel_key",
-          namespace: "quick_carousel_namespace_v1",
-          ownerId: response.body.data.shop.id,
-          type: "json",
-          value: collections,
-        },
-      ],
-    };
-
-    const createMetafield = await client.query({
-      data: {
-        query: metafieldCreate,
-        variables: variables,
-      },
-    });
-
-    if (createMetafield?.errors) {
-      return res.status(400).json({
-        errors: createMetafield.errors,
-      });
-    } else if (
-      createMetafield?.body?.data?.data?.metafieldsSet?.userErrors?.[0]?.message
-    ) {
-      return res.status(400).json({
-        errors: createMetafield.body.data?.data?.metafieldsSet?.userErrors?.[0],
-      });
-    }
-    res.status(200).json({
-      data: createMetafield,
-    });
-  } catch (error) {
-    return res.status(400).json({
-      error: error,
-    });
   }
 };

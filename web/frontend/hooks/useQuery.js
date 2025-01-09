@@ -2,26 +2,16 @@ import { useAuthenticatedFetch } from "./useAuthenticatedFetch";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
 
-const useFetchQuery = ({
-  apiEndpoint,
-  afterCursor,
-  beforeCursor,
-  limit,
-  apiKey,
-  fetchInit = {},
-}) => {
+const useFetchQuery = ({ apiEndpoint, apiKey, dependency, fetchInit = {} }) => {
   const authenticatedFetch = useAuthenticatedFetch();
-  const url = `${apiEndpoint}?afterCursor=${afterCursor || ""}&beforeCursor=${
-    beforeCursor || ""
-  }&limit=${limit}`;
   const fetch = useMemo(() => {
     return async () => {
-      const response = await authenticatedFetch(url, fetchInit);
+      const response = await authenticatedFetch(apiEndpoint, fetchInit);
       return response.json();
     };
-  }, [url]);
+  }, [apiEndpoint]);
 
-  return useQuery([apiKey, afterCursor, beforeCursor, apiEndpoint], fetch, {
+  return useQuery([apiKey, apiEndpoint, ...dependency], fetch, {
     onSuccess: (data) => {},
     refetchOnWindowFocus: false,
   });

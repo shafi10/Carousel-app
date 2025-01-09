@@ -25,21 +25,30 @@ export default function CollectionCarousel() {
   const [selectedItems, setSelectedItems] = useState([]);
   const afterCursor = searchParams?.after;
   const beforeCursor = searchParams?.before;
+  let limit = 3;
 
-  const { isError, isLoading, data } = useQuery({
-    apiEndpoint: "/api/collection/list",
-    afterCursor,
-    beforeCursor,
-    limit: 3,
+  const url = `/api/collection/list?afterCursor=${
+    afterCursor || ""
+  }&beforeCursor=${beforeCursor || ""}&limit=${limit}`;
+
+  const { isLoading, data } = useQuery({
+    apiEndpoint: url,
     apiKey: "collectionList",
+    dependency: [afterCursor, beforeCursor, limit],
   });
-  console.log("🚀 ~ CollectionCarousel ~ data:", data);
 
   const {
     mutate: createCollections,
     isError: isErrorForBulk,
     isLoading: isCreateLoading,
-  } = useCreate("/api/collection/create-collection", "collectionList");
+  } = useCreate("/api/metafield", "collectionList");
+
+  const { isLoading: isMetafieldLoading, data: metafieldData } = useQuery({
+    apiEndpoint: "/api/metafield",
+    apiKey: "collectionsMetafield",
+    dependency: [],
+  });
+  console.log("🚀 ~ CollectionCarousel ~ metafieldData:", metafieldData);
 
   const handleCheckboxChange = (item) => {
     setSelectedItems((prevSelected) =>
