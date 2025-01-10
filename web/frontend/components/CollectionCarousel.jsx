@@ -7,7 +7,7 @@ import {
   Button,
   InlineStack,
 } from "@shopify/polaris";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SortVirtualList from "./common/SortVirtualList";
 import useQuery from "../hooks/useQuery";
 import { PaginationButtons } from "./common/Pagination";
@@ -15,6 +15,8 @@ import { SortableItem } from "./SortableItem";
 import Skeleton from "./common/Skeleton";
 import { templates } from "../utils/template";
 import useCreate from "../hooks/useCreate";
+import DefaultSwiper from "./carousel/DefaultSwiper";
+import CoverFlow from "./carousel/CoverFlow";
 
 export default function CollectionCarousel() {
   const [searchParams, setSearchParams] = useState({ after: "" });
@@ -52,8 +54,8 @@ export default function CollectionCarousel() {
 
   const handleCheckboxChange = (item) => {
     setSelectedItems((prevSelected) =>
-      prevSelected.includes(item)
-        ? prevSelected.filter((i) => i !== item)
+      prevSelected.some((i) => i?.id === item?.id)
+        ? prevSelected.filter((i) => i?.id !== item?.id)
         : [...prevSelected, item]
     );
   };
@@ -71,13 +73,24 @@ export default function CollectionCarousel() {
   };
 
   const handleSubmit = (selectedItems, selectedTemplate) => {
-    const list = selectedItems.map((item) => item.handle);
+    // const list = selectedItems.map((item) => {
+    //   return {
+    //     title: item?.title,
+    //   };
+    // });
     const obj = {
-      template: selectedTemplate?.id,
-      collections: list,
+      template: selectedTemplate,
+      collections: selectedItems,
     };
     createCollections(obj);
   };
+
+  useEffect(() => {
+    if (metafieldData) {
+      setSelectedTemplate(metafieldData?.metafieldData?.template);
+      setSelectedItems(metafieldData?.metafieldData?.collections);
+    }
+  }, [metafieldData]);
 
   return (
     <Card>
@@ -110,9 +123,7 @@ export default function CollectionCarousel() {
           ))}
         </InlineGrid>
         <Card>
-          <Text as="h2" variant="bodyMd">
-            Content inside a card
-          </Text>
+          <CoverFlow items={selectedItems} />
         </Card>
         <Layout>
           <Layout.Section variant="oneHalf">
@@ -142,7 +153,7 @@ export default function CollectionCarousel() {
             <Card title="Tags" sectioned>
               <BlockStack gap="500">
                 <Text as="h2" variant="headingLg">
-                  All collections
+                  Collections
                 </Text>
                 {isLoading ? (
                   <>
@@ -171,7 +182,7 @@ export default function CollectionCarousel() {
                           <tr
                             key={item?.id}
                             className={
-                              selectedItems.includes(item)
+                              selectedItems.some((i) => i.id === item?.id)
                                 ? "selected-row"
                                 : "row"
                             }
@@ -179,7 +190,9 @@ export default function CollectionCarousel() {
                             <td className="td checkbox-column">
                               <input
                                 type="checkbox"
-                                checked={selectedItems.includes(item)}
+                                checked={selectedItems.some(
+                                  (i) => i.id === item?.id
+                                )}
                                 onChange={() => handleCheckboxChange(item)}
                               />
                             </td>

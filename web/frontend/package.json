@@ -28,6 +28,7 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.34.19",
     "react-router-dom": "^6.3.0",
+    "swiper": "^11.2.1",
     "vite": "^2.8.6"
   },
   "devDependencies": {
