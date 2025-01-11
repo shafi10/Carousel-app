@@ -7,7 +7,7 @@ import {
   Button,
   InlineStack,
 } from "@shopify/polaris";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import SortVirtualList from "./common/SortVirtualList";
 import useQuery from "../hooks/useQuery";
 import { PaginationButtons } from "./common/Pagination";
@@ -15,14 +15,29 @@ import { SortableItem } from "./SortableItem";
 import Skeleton from "./common/Skeleton";
 import { templates } from "../utils/template";
 import useCreate from "../hooks/useCreate";
-import DefaultSwiper from "./carousel/DefaultSwiper";
-import CoverFlow from "./carousel/CoverFlow";
+
+// Define a fallback loader
+const LoaderSkeleton = () => <Skeleton lines={8} />;
+
+// Map template IDs to their corresponding lazy-loaded components
+const componentMap = {
+  effectCoverflow: lazy(() => import("./carousel/CoverFlow")),
+  effectCards: lazy(() => import("./carousel/effectCards")),
+  effectCube: lazy(() => import("./carousel/effectCube")),
+  effectFlip: lazy(() => import("./carousel/effectFlip")),
+  freeMode: lazy(() => import("./carousel/freeMode")),
+  EF3DPrespective: lazy(() => import("./carousel/effectCreative3DPerspective")),
+  gridCarousel: lazy(() => import("./carousel/gridCarousel")),
+  EFSlideIn: lazy(() => import("./carousel/effectCreativeSlideIn")),
+  EFRotatingSlide: lazy(() => import("./carousel/effectCreativeRotatingSlide")),
+  EFDepthSlide: lazy(() => import("./carousel/effectCreativeDepthSlide")),
+};
 
 export default function CollectionCarousel() {
   const [searchParams, setSearchParams] = useState({ after: "" });
   const [selectedTemplate, setSelectedTemplate] = useState({
-    id: "beautiful",
-    label: "Beautiful",
+    id: "freeMode",
+    label: "Free Mode",
   });
   const [selectedItems, setSelectedItems] = useState([]);
   const afterCursor = searchParams?.after;
@@ -92,6 +107,9 @@ export default function CollectionCarousel() {
     }
   }, [metafieldData]);
 
+  // Get the selected component based on the current template ID
+  const SelectedComponent = componentMap[selectedTemplate.id];
+
   return (
     <Card>
       <BlockStack gap="500">
@@ -107,7 +125,7 @@ export default function CollectionCarousel() {
             Save Changes
           </Button>
         </InlineStack>
-        <InlineGrid gap="400" columns={6}>
+        <InlineGrid gap="400" columns={5}>
           {templates?.map((data) => (
             <div
               key={data?.id}
@@ -123,7 +141,15 @@ export default function CollectionCarousel() {
           ))}
         </InlineGrid>
         <Card>
-          <CoverFlow items={selectedItems} />
+          <Suspense fallback={<LoaderSkeleton />}>
+            {SelectedComponent ? (
+              <div className="carousel_preview_container">
+                <SelectedComponent items={selectedItems} />
+              </div>
+            ) : (
+              <p>No component selected</p>
+            )}
+          </Suspense>
         </Card>
         <Layout>
           <Layout.Section variant="oneHalf">
