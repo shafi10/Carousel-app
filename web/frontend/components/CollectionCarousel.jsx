@@ -42,7 +42,7 @@ export default function CollectionCarousel() {
   const [selectedItems, setSelectedItems] = useState([]);
   const afterCursor = searchParams?.after;
   const beforeCursor = searchParams?.before;
-  let limit = 3;
+  let limit = 10;
 
   const url = `/api/collection/list?afterCursor=${
     afterCursor || ""
