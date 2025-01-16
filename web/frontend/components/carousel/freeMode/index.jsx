@@ -22,7 +22,7 @@ export default function FreeModeCarousel({ items }) {
   return (
     <>
       <Swiper
-        slidesPerView={5}
+        slidesPerView={6}
         spaceBetween={30}
         freeMode={true}
         pagination={{
@@ -37,7 +37,7 @@ export default function FreeModeCarousel({ items }) {
             style={{ background: getRandomColor() }}
           >
             <div className="free_mode_card_design_image">
-              <img src={item?.image?.url} />
+              <img src={item?.image?.url} alt={item?.image?.alt} />
             </div>
             <div className="free_mode_card_design_content">
               <h2>{item.title}</h2>

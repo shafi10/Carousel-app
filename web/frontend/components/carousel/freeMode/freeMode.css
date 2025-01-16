@@ -1,55 +1,30 @@
 .free_mode_swiper {
   width: 100%;
-  height: 300px;
+  height: 258.83px;
 }
 
 .free_mode_card_design {
-  clip-path: polygon(
-    0% 10%, /* Top-left curve */
-    90% 0%, /* Top-right corner */
-    100% 90%, /* Bottom-right curve */
-    10% 100% /* Bottom-left corner */
-  );
-  text-align: center;
-  font-size: 18px;
-
-  /* Center slide text vertically */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.5s ease-in-out;
-  border-radius: 12px;
-}
-
-.free_mode_card_design:hover{
-  clip-path: none;
+  width: 100%;
 }
 
 .free_mode_card_design_image{
-  height: 200px;
-  width: 200px;
-  border-radius: 12px;
-  overflow: hidden;
+  padding-top: 100%; /* 16:9 aspect ratio */
+  position: relative; 
+  width: 100%; /* Ensures it stretches to fit the parent width */
 }
 
-.free_mode_card_design img {
-  display: block;
+.free_mode_card_design_image img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; 
 }
 
 .free_mode_card_design_content{
   margin: 12px 0 12px 0;
   padding: 12px;
-  width: 200px;
-  flex: 1;
   background-color: #ffffff;
   color: #000000;
   border-radius: 12px;
