@@ -11,14 +11,9 @@ import "./freeMode.css";
 
 // import required modules
 import { FreeMode, Pagination } from "swiper/modules";
+import LinkIcon from "../../common/linkIcon";
 
 export default function FreeModeCarousel({ items }) {
-  const getRandomColor = () => {
-    const hue = Math.floor(Math.random() * 360); // Random hue (0-360)
-    const saturation = Math.floor(Math.random() * 41) + 40; // Saturation (40-80%)
-    const lightness = Math.floor(Math.random() * 41) + 30; // Lightness (30-70%)
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-  };
   return (
     <>
       <Swiper
@@ -29,19 +24,19 @@ export default function FreeModeCarousel({ items }) {
           clickable: true,
         }}
         modules={[FreeMode, Pagination]}
-        className="mySwiper free_mode_swiper"
+        className="mySwiper AI_quick__swiper"
       >
         {items?.map((item) => (
-          <SwiperSlide
-            className="free_mode_card_design"
-            style={{ background: getRandomColor() }}
-          >
-            <div className="free_mode_card_design_image">
+          <SwiperSlide className="AI_quick__card_design">
+            <div className="AI_quick__card_design_image">
               <img src={item?.image?.url} alt={item?.image?.alt} />
             </div>
-            <div className="free_mode_card_design_content">
+            <div className="AI_quick__card_design_content">
               <h2>{item.title}</h2>
             </div>
+            <a className="AI_quick__icon">
+              <LinkIcon />
+            </a>
           </SwiperSlide>
         ))}
       </Swiper>

@@ -11,12 +11,13 @@ import "./gridCarousel.css";
 
 // import required modules
 import { Grid, Pagination } from "swiper/modules";
+import LinkIcon from "../../common/linkIcon";
 
-export default function GridCarousel() {
+export default function GridCarousel({ items }) {
   return (
     <>
       <Swiper
-        slidesPerView={3}
+        slidesPerView={4}
         grid={{
           rows: 2,
         }}
@@ -25,17 +26,21 @@ export default function GridCarousel() {
           clickable: true,
         }}
         modules={[Grid, Pagination]}
-        className="mySwiper"
+        className="mySwiper AI_quick__swiper"
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
+        {items?.map((item) => (
+          <SwiperSlide className="AI_quick__card_design AI_quick__card_design_grid_carousel">
+            <div className="AI_quick__card_design_image">
+              <img src={item?.image?.url} alt={item?.image?.alt} />
+            </div>
+            <div className="AI_quick__card_design_content">
+              <h2>{item.title}</h2>
+            </div>
+            <a className="AI_quick__icon">
+              <LinkIcon />
+            </a>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   );

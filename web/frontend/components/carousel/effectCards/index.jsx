@@ -10,6 +10,7 @@ import "./effectCards.css";
 
 // import required modules
 import { EffectCards } from "swiper/modules";
+import LinkIcon from "../../common/linkIcon";
 
 export default function EffectCardsCarousel({ items }) {
   return (
@@ -18,12 +19,19 @@ export default function EffectCardsCarousel({ items }) {
         effect={"cards"}
         grabCursor={true}
         modules={[EffectCards]}
-        className="mySwiper"
+        className="mySwiper AI_quick__swiper AI_quick_carousel__defined_width"
       >
-        {items.map((item, index) => (
-          <SwiperSlide key={index}>
-            <img src={item?.image?.url} alt="Slide 1" />
-            <h2>{item.title}</h2>
+        {items?.map((item) => (
+          <SwiperSlide className="AI_quick__card_design">
+            <div className="AI_quick__card_design_image">
+              <img src={item?.image?.url} alt={item?.image?.alt} />
+            </div>
+            <div className="AI_quick__card_design_content">
+              <h2>{item.title}</h2>
+            </div>
+            <a className="AI_quick__icon">
+              <LinkIcon />
+            </a>
           </SwiperSlide>
         ))}
       </Swiper>

@@ -5,14 +5,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-cube";
-import "swiper/css/pagination";
 
 import "./effectCube.css";
 
 // import required modules
-import { EffectCube, Pagination } from "swiper/modules";
+import { EffectCube } from "swiper/modules";
+import LinkIcon from "../../common/linkIcon";
 
-export default function EffectCubeCarousel() {
+export default function EffectCubeCarousel({ items }) {
   return (
     <>
       <Swiper
@@ -24,22 +24,22 @@ export default function EffectCubeCarousel() {
           shadowOffset: 20,
           shadowScale: 0.94,
         }}
-        pagination={true}
-        modules={[EffectCube, Pagination]}
-        className="mySwiper"
+        modules={[EffectCube]}
+        className="mySwiper AI_quick__swiper AI_quick_carousel__defined_width"
       >
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-        </SwiperSlide>
+        {items?.map((item) => (
+          <SwiperSlide className="AI_quick__card_design">
+            <div className="AI_quick__card_design_image">
+              <img src={item?.image?.url} alt={item?.image?.alt} />
+            </div>
+            <div className="AI_quick__card_design_content">
+              <h2>{item.title}</h2>
+            </div>
+            <a className="AI_quick__icon">
+              <LinkIcon />
+            </a>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   );

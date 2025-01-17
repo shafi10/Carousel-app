@@ -21,7 +21,7 @@ const LoaderSkeleton = () => <Skeleton lines={8} />;
 
 // Map template IDs to their corresponding lazy-loaded components
 const componentMap = {
-  effectCoverflow: lazy(() => import("./carousel/CoverFlow")),
+  effectCoverflow: lazy(() => import("./carousel/coverFlow")),
   effectCards: lazy(() => import("./carousel/effectCards")),
   effectCube: lazy(() => import("./carousel/effectCube")),
   effectFlip: lazy(() => import("./carousel/effectFlip")),
@@ -141,15 +141,23 @@ export default function CollectionCarousel() {
           ))}
         </InlineGrid>
         <Card>
-          <Suspense fallback={<LoaderSkeleton />}>
-            {SelectedComponent ? (
-              <div className="carousel_preview_container">
-                <SelectedComponent items={selectedItems} />
-              </div>
-            ) : (
-              <p>No component selected</p>
-            )}
-          </Suspense>
+          <BlockStack gap="500">
+            <InlineStack gap="400" wrap={false} blockAlign="center">
+              <span className="AI_quick_carousel_tag">Preview</span>
+              <span className="AI_quick_carousel_tag">
+                {selectedTemplate?.label}
+              </span>
+            </InlineStack>
+            <Suspense fallback={<LoaderSkeleton />}>
+              {SelectedComponent ? (
+                <div className="carousel_preview_container">
+                  <SelectedComponent items={selectedItems} />
+                </div>
+              ) : (
+                <p>No component selected</p>
+              )}
+            </Suspense>
+          </BlockStack>
         </Card>
         <Layout>
           <Layout.Section variant="oneHalf">
