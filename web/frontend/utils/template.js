@@ -1,6 +1,6 @@
 export const templates = [
   { id: "freeMode", label: "Free Mode" },
-  { id: "gridCarousel", label: "Grid Carousel" },
+  // { id: "gridCarousel", label: "Grid Carousel" },
   { id: "effectCube", label: "Effect Cube" },
   { id: "effectCoverflow", label: "Effect Coverflow" },
   { id: "effectFlip", label: "Effect Flip" },

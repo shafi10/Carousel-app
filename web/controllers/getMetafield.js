@@ -1,7 +1,7 @@
 import { queryDataWithVariables } from "../utils/getQueryData.js";
 import { metafieldQuery } from "../utils/query.js";
 
-export const getMetafield = async (req, res) => {
+export const getMetafield = async (res) => {
   try {
     const variables = {
       namespace: "quick_carousel_namespace_v1",
@@ -16,9 +16,10 @@ export const getMetafield = async (req, res) => {
     const parseResponse = metafieldResponse
       ? JSON.parse(metafieldResponse)
       : null;
-    return res
-      .status(200)
-      .json({ metafieldData: parseResponse, message: "Success" });
+    return parseResponse;
+    // return res
+    //   .status(200)
+    //   .json({ metafieldData: parseResponse, message: "Success" });
   } catch (error) {
     console.error("Error fetching customers:", error);
     return res

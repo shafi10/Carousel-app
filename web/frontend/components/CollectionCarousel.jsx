@@ -34,15 +34,23 @@ const componentMap = {
 };
 
 export default function CollectionCarousel() {
-  const [searchParams, setSearchParams] = useState({ after: "" });
   const [selectedTemplate, setSelectedTemplate] = useState({
     id: "freeMode",
     label: "Free Mode",
   });
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const [searchParams, setSearchParams] = useState({ after: "" });
   const afterCursor = searchParams?.after;
   const beforeCursor = searchParams?.before;
   let limit = 10;
+
+  const [searchSelectedParams, setSearchSelectedParams] = useState({
+    after: "",
+  });
+  const afterSelectedCursor = searchSelectedParams?.after;
+  const beforeSelectedCursor = searchSelectedParams?.before;
+  let selectedLimit = 100;
 
   const url = `/api/collection/list?afterCursor=${
     afterCursor || ""
@@ -60,10 +68,14 @@ export default function CollectionCarousel() {
     isLoading: isCreateLoading,
   } = useCreate("/api/metafield", "collectionList");
 
+  const selectedUrl = `/api/collection/selectedList?afterCursor=${
+    afterSelectedCursor || ""
+  }&beforeCursor=${beforeSelectedCursor || ""}&limit=${selectedLimit}`;
+
   const { isLoading: isMetafieldLoading, data: metafieldData } = useQuery({
-    apiEndpoint: "/api/metafield",
-    apiKey: "collectionsMetafield",
-    dependency: [],
+    apiEndpoint: selectedUrl,
+    apiKey: "selectedCollections",
+    dependency: [afterSelectedCursor, beforeSelectedCursor, selectedLimit],
   });
   console.log("🚀 ~ CollectionCarousel ~ metafieldData:", metafieldData);
 
@@ -88,27 +100,28 @@ export default function CollectionCarousel() {
   };
 
   const handleSubmit = (selectedItems, selectedTemplate) => {
-    // const list = selectedItems.map((item) => {
-    //   return {
-    //     title: item?.title,
-    //   };
-    // });
+    const handleList = selectedItems.map((item) => {
+      return {
+        id: item?.id,
+        handle: item?.handle,
+      };
+    });
     const obj = {
       template: selectedTemplate,
-      collections: selectedItems,
+      collections: handleList,
     };
     createCollections(obj);
   };
 
   useEffect(() => {
     if (metafieldData) {
-      setSelectedTemplate(metafieldData?.metafieldData?.template);
-      setSelectedItems(metafieldData?.metafieldData?.collections);
+      setSelectedTemplate(metafieldData?.template);
+      setSelectedItems(metafieldData?.collections);
     }
   }, [metafieldData]);
 
   // Get the selected component based on the current template ID
-  const SelectedComponent = componentMap[selectedTemplate.id];
+  const SelectedComponent = componentMap[selectedTemplate?.id];
 
   return (
     <Card>
@@ -167,18 +180,26 @@ export default function CollectionCarousel() {
                   Selected collections
                 </Text>
                 <BlockStack gap="200">
-                  {selectedItems?.length > 0 && (
-                    <>
-                      <SortVirtualList
-                        items={selectedItems}
-                        setSelectedItems={setSelectedItems}
-                      >
-                        {selectedItems?.map((item) => (
-                          <SortableItem key={item?.id} item={item} />
-                        ))}
-                      </SortVirtualList>
-                    </>
+                  {isMetafieldLoading ? (
+                    <Skeleton lines={10} />
+                  ) : (
+                    selectedItems?.length > 0 && (
+                      <>
+                        <SortVirtualList
+                          items={selectedItems}
+                          setSelectedItems={setSelectedItems}
+                        >
+                          {selectedItems?.map((item) => (
+                            <SortableItem key={item?.id} item={item} />
+                          ))}
+                        </SortVirtualList>
+                      </>
+                    )
                   )}
+                  <PaginationButtons
+                    data={metafieldData}
+                    setSearchParams={setSearchSelectedParams}
+                  />
                 </BlockStack>
               </BlockStack>
             </Card>
@@ -202,7 +223,7 @@ export default function CollectionCarousel() {
                             <input
                               type="checkbox"
                               checked={
-                                selectedItems.length ===
+                                selectedItems?.length ===
                                 data?.collections?.length
                               }
                               onChange={handleSelectAll}
@@ -216,7 +237,8 @@ export default function CollectionCarousel() {
                           <tr
                             key={item?.id}
                             className={
-                              selectedItems.some((i) => i.id === item?.id)
+                              selectedItems &&
+                              selectedItems?.some((i) => i.id === item?.id)
                                 ? "selected-row"
                                 : "row"
                             }
@@ -224,9 +246,10 @@ export default function CollectionCarousel() {
                             <td className="td checkbox-column">
                               <input
                                 type="checkbox"
-                                checked={selectedItems.some(
-                                  (i) => i.id === item?.id
-                                )}
+                                checked={
+                                  selectedItems &&
+                                  selectedItems?.some((i) => i.id === item?.id)
+                                }
                                 onChange={() => handleCheckboxChange(item)}
                               />
                             </td>
