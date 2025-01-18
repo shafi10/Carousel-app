@@ -1,3 +1,24 @@
-# This file stores configurations for your Shopify app.
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-scopes = "write_products, read_customers"
+client_id = "859a48fdfd50c97762ddebf86fbf5301"
+application_url = "https://susan-connection-mill-airport.trycloudflare.com"
+embedded = true
+name = "App  Development"
+handle = "app-development-23"
+
+[webhooks]
+api_version = "2025-01"
+
+[auth]
+redirect_urls = [
+  "https://susan-connection-mill-airport.trycloudflare.com/auth/callback",
+  "https://susan-connection-mill-airport.trycloudflare.com/auth/shopify/callback",
+  "https://susan-connection-mill-airport.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "quick-start-v2.myshopify.com"
+automatically_update_urls_on_dev = true

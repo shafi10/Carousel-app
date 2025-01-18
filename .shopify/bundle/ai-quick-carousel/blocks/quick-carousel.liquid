@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+{% assign quick_carousel_options = shop.metafields.quick_carousel_namespace_v1.quick_collection_carousel_key.value %}
+{% assign quick_carousel_items = quick_carousel_options.collections %}
+<div class="ai_quick_carousel_container">
+  <div class="swiper mySwiper carousel_preview_container">
+    <div class="swiper-wrapper AI_quick__swiper">
+      {% for item in quick_carousel_items %}
+        {% assign collection_handle = item.handle %}
+        {% assign collection_item = collections[collection_handle] %}
+        <div class="swiper-slide AI_quick__card_design">
+          <div class="AI_quick__card_design_image">
+            <img
+              srcset="
+                {%- if collection_item.featured_image.width >= 165 -%}{{ collection_item.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
+                {%- if collection_item.featured_image.width >= 330 -%}{{ collection_item.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
+                {%- if collection_item.featured_image.width >= 535 -%}{{ collection_item.featured_image | image_url: width: 535 }} 535w,{%- endif -%}
+                {%- if collection_item.featured_image.width >= 750 -%}{{ collection_item.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
+                {%- if collection_item.featured_image.width >= 1000 -%}{{ collection_item.featured_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+                {%- if collection_item.featured_image.width >= 1500 -%}{{ collection_item.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                {%- if collection_item.featured_image.width >= 3000 -%}{{ collection_item.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+                {{ collection_item.featured_image | image_url }} {{ collection_item.featured_image.width }}w
+              "
+              src="{{ collection_item.featured_image | image_url: width: 1500 }}"
+              alt="{{ collection_item.featured_image.alt }}"
+              height="500"
+              width="500"
+              loading="lazy"
+            >
+          </div>
+          <div class="AI_quick__card_design_content">
+            <h3 class="AI_quick__card_design_content_title">{{ collection_item.title }}</h3>
+          </div>
+          <a href="{{ collection_item.url }}" class="AI_quick__icon">
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"
+              />
+            </svg>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+<script></script>
+
+{% schema %}
+{
+  "name": "Quick Carousel",
+  "target": "section",
+  "stylesheet": "styles.css",
+  "javascript": "app.js",
+  "settings": [{ "type": "product", "id": "product", "label": "product", "autofill": true }]
+}
+{% endschema %}
