@@ -6,6 +6,7 @@ import {
   Layout,
   Button,
   InlineStack,
+  Grid,
 } from "@shopify/polaris";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import SortVirtualList from "./common/SortVirtualList";
@@ -15,6 +16,7 @@ import { SortableItem } from "./SortableItem";
 import Skeleton from "./common/Skeleton";
 import { templates } from "../utils/template";
 import useCreate from "../hooks/useCreate";
+import RadioButtonList from "./common/RadioButton";
 
 // Define a fallback loader
 const LoaderSkeleton = () => <Skeleton lines={8} />;
@@ -39,7 +41,6 @@ export default function CollectionCarousel() {
     label: "Free Mode",
   });
   const [selectedItems, setSelectedItems] = useState([]);
-
   const [searchParams, setSearchParams] = useState({ after: "" });
   const afterCursor = searchParams?.after;
   const beforeCursor = searchParams?.before;
@@ -130,81 +131,131 @@ export default function CollectionCarousel() {
           <Text variant="headingLg" as="p">
             Carousel Templates
           </Text>
-          <Button
-            variant="primary"
-            size="large"
-            onClick={() => handleSubmit(selectedItems, selectedTemplate)}
-          >
-            Save Changes
-          </Button>
         </InlineStack>
-        <InlineGrid gap="400" columns={5}>
-          {templates?.map((data) => (
-            <div
-              key={data?.id}
-              className={
-                data?.id === selectedTemplate?.id ? "badge active" : "badge"
-              }
-              onClick={() => handleChangeTemplate(data)}
-            >
-              <Text variant="headingMd" as="h5">
-                {data?.label}
-              </Text>
-            </div>
-          ))}
-        </InlineGrid>
-        <Card>
-          <BlockStack gap="500">
-            <InlineStack gap="400" wrap={false} blockAlign="center">
-              <span className="AI_quick_carousel_tag">Preview</span>
-              <span className="AI_quick_carousel_tag">
-                {selectedTemplate?.label}
-              </span>
-            </InlineStack>
-            <Suspense fallback={<LoaderSkeleton />}>
-              {SelectedComponent ? (
-                <div className="carousel_preview_container">
-                  <SelectedComponent items={selectedItems} />
-                </div>
-              ) : (
-                <p>No component selected</p>
-              )}
-            </Suspense>
-          </BlockStack>
-        </Card>
         <Layout>
-          <Layout.Section variant="oneHalf">
-            <Card title="Order details" sectioned>
+          <Layout.Section variant="oneThird">
+            <InlineGrid gap="300" columns={2}>
+              {templates?.map((data) => (
+                <div
+                  key={data?.id}
+                  className={
+                    data?.id === selectedTemplate?.id ? "badge active" : "badge"
+                  }
+                  onClick={() => handleChangeTemplate(data)}
+                >
+                  <Text variant="headingMd" as="h5">
+                    {data?.label}
+                  </Text>
+                </div>
+              ))}
+            </InlineGrid>
+          </Layout.Section>
+          <Layout.Section>
+            <Card>
               <BlockStack gap="500">
-                <Text as="h2" variant="headingLg">
-                  Selected collections
-                </Text>
-                <BlockStack gap="200">
-                  {isMetafieldLoading ? (
-                    <Skeleton lines={10} />
+                <InlineStack gap="400" wrap={false} blockAlign="center">
+                  <span className="AI_quick_carousel_tag">Preview</span>
+                  <span className="AI_quick_carousel_tag">
+                    {selectedTemplate?.label}
+                  </span>
+                </InlineStack>
+                <Suspense fallback={<LoaderSkeleton />}>
+                  {SelectedComponent ? (
+                    <div className="carousel_preview_container">
+                      <SelectedComponent items={selectedItems} />
+                    </div>
                   ) : (
-                    selectedItems?.length > 0 && (
-                      <>
-                        <SortVirtualList
-                          items={selectedItems}
-                          setSelectedItems={setSelectedItems}
-                        >
-                          {selectedItems?.map((item) => (
-                            <SortableItem key={item?.id} item={item} />
-                          ))}
-                        </SortVirtualList>
-                      </>
-                    )
+                    <p>No component selected</p>
                   )}
-                  <PaginationButtons
-                    data={metafieldData}
-                    setSearchParams={setSearchSelectedParams}
-                  />
-                </BlockStack>
+                </Suspense>
               </BlockStack>
             </Card>
           </Layout.Section>
-          <Layout.Section variant="oneHalf">
+        </Layout>
+        <Layout>
+          <Layout.Section>
+            <Card title="Order details" sectioned>
+              <BlockStack gap="500">
+                <InlineStack wrap={false} align="space-between">
+                  <Text variant="headingLg" as="p">
+                    Carousel Templates
+                  </Text>
+                  <Button
+                    variant="primary"
+                    size="large"
+                    onClick={() =>
+                      handleSubmit(selectedItems, selectedTemplate)
+                    }
+                  >
+                    Save Changes
+                  </Button>
+                </InlineStack>
+                <Grid>
+                  <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
+                    <Card>
+                      <BlockStack gap="200">
+                        <Text as="h2" variant="headingLg">
+                          Selected Sortable collections
+                        </Text>
+                        {isMetafieldLoading ? (
+                          <Skeleton lines={10} />
+                        ) : (
+                          selectedItems?.length > 0 && (
+                            <>
+                              <SortVirtualList
+                                items={selectedItems}
+                                setSelectedItems={setSelectedItems}
+                              >
+                                {selectedItems?.map((item) => (
+                                  <SortableItem key={item?.id} item={item} />
+                                ))}
+                              </SortVirtualList>
+                            </>
+                          )
+                        )}
+                        <PaginationButtons
+                          data={metafieldData}
+                          setSearchParams={setSearchSelectedParams}
+                        />
+                      </BlockStack>
+                    </Card>
+                  </Grid.Cell>
+                  <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
+                    <Card>
+                      <BlockStack gap="200">
+                        <Text as="h2" variant="headingLg">
+                          Select Template
+                        </Text>
+                        <InlineGrid gap="400" columns={2}>
+                          <Card>
+                            <Text as="h5" variant="headingXs">
+                              Desktop Template
+                            </Text>
+                            <RadioButtonList
+                              items={templates}
+                              setSelectedTemplate={setSelectedTemplate}
+                              selectedTemplate={selectedTemplate}
+                            />
+                          </Card>
+                          <Card>
+                            <Text as="h5" variant="headingXs">
+                              Mobile Template
+                            </Text>
+                            <RadioButtonList
+                              items={templates}
+                              setSelectedTemplate={setSelectedTemplate}
+                              selectedTemplate={selectedTemplate}
+                            />
+                          </Card>
+                        </InlineGrid>
+                      </BlockStack>
+                    </Card>
+                  </Grid.Cell>
+                </Grid>
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+          <Layout.Section variant="oneThird">
             <Card title="Tags" sectioned>
               <BlockStack gap="500">
                 <Text as="h2" variant="headingLg">

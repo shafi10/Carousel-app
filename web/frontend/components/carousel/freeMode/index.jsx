@@ -17,7 +17,7 @@ export default function FreeModeCarousel({ items }) {
   return (
     <>
       <Swiper
-        slidesPerView={6}
+        slidesPerView={4}
         spaceBetween={30}
         freeMode={true}
         pagination={{
