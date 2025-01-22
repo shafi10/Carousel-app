@@ -14,7 +14,7 @@ function CoverFlow({ items }) {
       effect={"coverflow"}
       grabCursor={true}
       centeredSlides={true}
-      slidesPerView={7}
+      slidesPerView={5}
       coverflowEffect={{
         rotate: 50,
         stretch: 0,

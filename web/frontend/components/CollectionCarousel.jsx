@@ -19,7 +19,7 @@ import useCreate from "../hooks/useCreate";
 import RadioButtonList from "./common/RadioButton";
 
 // Define a fallback loader
-const LoaderSkeleton = () => <Skeleton lines={8} />;
+const LoaderSkeleton = () => <Skeleton lines={15} />;
 
 // Map template IDs to their corresponding lazy-loaded components
 const componentMap = {
@@ -37,6 +37,16 @@ const componentMap = {
 
 export default function CollectionCarousel() {
   const [selectedTemplate, setSelectedTemplate] = useState({
+    desktop: {
+      id: "freeMode",
+      label: "Free Mode",
+    },
+    mobile: {
+      id: "freeMode",
+      label: "Free Mode",
+    },
+  });
+  const [selectedPreview, setSelectedPreview] = useState({
     id: "freeMode",
     label: "Free Mode",
   });
@@ -97,7 +107,7 @@ export default function CollectionCarousel() {
   };
 
   const handleChangeTemplate = (data) => {
-    setSelectedTemplate(data);
+    setSelectedPreview(data);
   };
 
   const handleSubmit = (selectedItems, selectedTemplate) => {
@@ -122,14 +132,14 @@ export default function CollectionCarousel() {
   }, [metafieldData]);
 
   // Get the selected component based on the current template ID
-  const SelectedComponent = componentMap[selectedTemplate?.id];
+  const SelectedComponent = componentMap[selectedPreview?.id];
 
   return (
     <Card>
       <BlockStack gap="500">
         <InlineStack wrap={false} align="space-between">
           <Text variant="headingLg" as="p">
-            Carousel Templates
+            Carousel Preview Templates
           </Text>
         </InlineStack>
         <Layout>
@@ -139,7 +149,7 @@ export default function CollectionCarousel() {
                 <div
                   key={data?.id}
                   className={
-                    data?.id === selectedTemplate?.id ? "badge active" : "badge"
+                    data?.id === selectedPreview?.id ? "badge active" : "badge"
                   }
                   onClick={() => handleChangeTemplate(data)}
                 >
@@ -153,12 +163,12 @@ export default function CollectionCarousel() {
           <Layout.Section>
             <Card>
               <BlockStack gap="500">
-                <InlineStack gap="400" wrap={false} blockAlign="center">
+                {/* <InlineStack gap="400" wrap={false} blockAlign="center">
                   <span className="AI_quick_carousel_tag">Preview</span>
                   <span className="AI_quick_carousel_tag">
-                    {selectedTemplate?.label}
+                    {selectedPreview?.label}
                   </span>
-                </InlineStack>
+                </InlineStack> */}
                 <Suspense fallback={<LoaderSkeleton />}>
                   {SelectedComponent ? (
                     <div className="carousel_preview_container">
@@ -178,7 +188,7 @@ export default function CollectionCarousel() {
               <BlockStack gap="500">
                 <InlineStack wrap={false} align="space-between">
                   <Text variant="headingLg" as="p">
-                    Carousel Templates
+                    Create settings for viewing in themes
                   </Text>
                   <Button
                     variant="primary"
@@ -235,6 +245,7 @@ export default function CollectionCarousel() {
                               items={templates}
                               setSelectedTemplate={setSelectedTemplate}
                               selectedTemplate={selectedTemplate}
+                              windowType="desktop"
                             />
                           </Card>
                           <Card>
@@ -245,6 +256,7 @@ export default function CollectionCarousel() {
                               items={templates}
                               setSelectedTemplate={setSelectedTemplate}
                               selectedTemplate={selectedTemplate}
+                              windowType="mobile"
                             />
                           </Card>
                         </InlineGrid>
