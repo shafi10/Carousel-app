@@ -5,12 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-flip";
-import "swiper/css/navigation";
 
 import "./effectFlip.css";
 
 // import required modules
-import { EffectFlip, Navigation } from "swiper/modules";
+import { EffectFlip } from "swiper/modules";
 import LinkIcon from "../../common/linkIcon";
 
 export default function EffectFlipCarousel({ items }) {
@@ -19,8 +18,7 @@ export default function EffectFlipCarousel({ items }) {
       <Swiper
         effect={"flip"}
         grabCursor={true}
-        navigation={true}
-        modules={[EffectFlip, Navigation]}
+        modules={[EffectFlip]}
         className="mySwiper AI_quick__swiper AI_quick_carousel__defined_width"
       >
         {items?.map((item) => (

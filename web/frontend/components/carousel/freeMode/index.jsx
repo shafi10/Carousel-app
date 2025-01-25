@@ -23,6 +23,7 @@ export default function FreeModeCarousel({ items }) {
         pagination={{
           clickable: true,
         }}
+        grabCursor={true}
         modules={[FreeMode, Pagination]}
         className="mySwiper AI_quick__swiper"
       >

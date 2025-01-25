@@ -5,12 +5,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-creative";
-import "./effectCreative.css";
+// import "./effectCreative.css";
 
 // import required modules
 import { EffectCreative } from "swiper/modules";
+import LinkIcon from "../../common/linkIcon";
 
-export default function EffectCreativeCarousel() {
+export default function EffectCreativeCarousel({ items }) {
   return (
     <>
       <Swiper
@@ -27,17 +28,21 @@ export default function EffectCreativeCarousel() {
           },
         }}
         modules={[EffectCreative]}
-        className="mySwiper2"
+        className="AI_quick__swiper AI_quick_carousel__defined_width"
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
+        {items?.map((item) => (
+          <SwiperSlide className="AI_quick__card_design">
+            <div className="AI_quick__card_design_image">
+              <img src={item?.image?.url} alt={item?.image?.alt} />
+            </div>
+            <div className="AI_quick__card_design_content">
+              <h2>{item.title}</h2>
+            </div>
+            <a className="AI_quick__icon">
+              <LinkIcon />
+            </a>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   );

@@ -18,6 +18,7 @@ export default function EffectCubeCarousel({ items }) {
       <Swiper
         effect={"cube"}
         grabCursor={true}
+        freeMode={true}
         cubeEffect={{
           shadow: true,
           slideShadows: true,

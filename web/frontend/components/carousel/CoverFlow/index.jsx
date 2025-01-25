@@ -1,10 +1,9 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Pagination } from "swiper/modules";
+import { EffectCoverflow } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
 import "./coverflow.css";
 import LinkIcon from "../../common/linkIcon";
 
@@ -14,7 +13,7 @@ function CoverFlow({ items }) {
       effect={"coverflow"}
       grabCursor={true}
       centeredSlides={true}
-      slidesPerView={5}
+      slidesPerView={4}
       coverflowEffect={{
         rotate: 50,
         stretch: 0,
@@ -22,13 +21,12 @@ function CoverFlow({ items }) {
         modifier: 1,
         slideShadows: true,
       }}
-      pagination={{ clickable: true }}
-      modules={[EffectCoverflow, Pagination]}
-      className="mySwiper AI_quick__swiper"
+      modules={[EffectCoverflow]}
+      className="AI_quick__swiper"
     >
       {items?.map((item) => (
         <SwiperSlide className="AI_quick__card_design">
-          <div className="AI_quick__card_design_image">
+          <div className="AI_quick__card_design_image AI_quick__card_design_image_coverflow">
             <img src={item?.image?.url} alt={item?.image?.alt} />
           </div>
           <div className="AI_quick__card_design_content">
