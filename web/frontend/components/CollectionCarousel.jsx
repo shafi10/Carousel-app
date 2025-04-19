@@ -17,6 +17,7 @@ import Skeleton from "./common/Skeleton";
 import { templates } from "../utils/template";
 import useCreate from "../hooks/useCreate";
 import RadioButtonList from "./common/RadioButton";
+import { Spinners } from "./Spinner";
 
 // Define a fallback loader
 const LoaderSkeleton = () => <Skeleton lines={15} />;
@@ -88,7 +89,6 @@ export default function CollectionCarousel() {
     apiKey: "selectedCollections",
     dependency: [afterSelectedCursor, beforeSelectedCursor, selectedLimit],
   });
-  console.log("🚀 ~ CollectionCarousel ~ metafieldData:", metafieldData);
 
   const handleCheckboxChange = (item) => {
     setSelectedItems((prevSelected) =>
@@ -126,6 +126,7 @@ export default function CollectionCarousel() {
 
   useEffect(() => {
     if (metafieldData) {
+      setSelectedPreview(metafieldData?.template?.desktop);
       setSelectedTemplate(metafieldData?.template);
       setSelectedItems(metafieldData?.collections);
     }
@@ -197,7 +198,7 @@ export default function CollectionCarousel() {
                       handleSubmit(selectedItems, selectedTemplate)
                     }
                   >
-                    Save Changes
+                    {isCreateLoading ? <Spinners /> : "Save Changes"}
                   </Button>
                 </InlineStack>
                 <Grid>

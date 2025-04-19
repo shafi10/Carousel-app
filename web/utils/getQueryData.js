@@ -12,7 +12,7 @@ export const getQueryData = async (res, shopQuery) => {
 
     return response;
   } catch (error) {
-    console.error(error);
+    console.log("🚀 ~ getQueryData ~ error:", error);
     return error;
   }
 };

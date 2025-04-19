@@ -6,6 +6,7 @@ import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 import collectionsRoute from "./routes/collections.js";
 import metaFieldRoute from "./routes/metafield.js";
+import pricingRoute from "./routes/appPricing.js";
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -55,6 +56,7 @@ app.get("/api/shop", async (_req, res) => {
 
 app.use("/api/collection", collectionsRoute);
 app.use("/api/metafield", metaFieldRoute);
+app.use("/api/pricing", pricingRoute);
 
 app.use(shopify.cspHeaders());
 app.use(serveStatic(STATIC_PATH, { index: false }));

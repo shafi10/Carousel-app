@@ -23,7 +23,8 @@ const fetchAllCollections = async (session, variables) => {
     const pageInfo = response.body.data.collections.pageInfo;
     return { collections, pageInfo };
   } catch (error) {
-    console.error("Error fetching customers:", error);
+    console.error("Error fetching customers:", error?.response?.errors);
+    throw error?.response?.errors;
   }
 };
 

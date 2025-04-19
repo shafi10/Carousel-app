@@ -127,19 +127,16 @@
 }
 
 .AI_quick__card_design_content{
-  position: absolute;
-  bottom: 0px;
-  color: #ffffff;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 50%;
-  background: linear-gradient(to top, #2c2c2c, transparent 100%);
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  padding: 20px 10px;
+  padding: 12px;
+  background-color: #ffffff;
   font-size: 16px;
+  text-align: center;
+}
+
+.AI_quick__card_design_content_title{
+  margin: 0 !important;
+  font-size: 16px;
+  text-align: center;
 }
 
 .AI_quick__icon {

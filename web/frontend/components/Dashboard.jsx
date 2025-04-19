@@ -1,7 +1,7 @@
 import React from "react";
 // import { Spinners } from "./index";
 import { Banner, BlockStack } from "@shopify/polaris";
-import FullScreenBar from "./Fullscreenbar";
+// import FullScreenBar from "./Fullscreenbar";
 import { useState } from "react";
 import CollectionCarousel from "./CollectionCarousel";
 import ProductCarousel from "./ProductCarousel";
@@ -25,7 +25,7 @@ export function Dashboard() {
           ) : (
             <> */}
       <BlockStack gap="500">
-        <FullScreenBar setNavItem={setNavItem} />
+        {/* <FullScreenBar setNavItem={setNavItem} /> */}
         {navItem === "collections" ? (
           <CollectionCarousel />
         ) : (
