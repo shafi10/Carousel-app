@@ -29,7 +29,7 @@ export default function EffectCubeCarousel({ items }) {
         className="mySwiper AI_quick__swiper AI_quick_carousel__defined_width"
       >
         {items?.map((item) => (
-          <SwiperSlide className="AI_quick__card_design">
+          <SwiperSlide className="AI_quick__card_design" key={item?.id}>
             <div className="AI_quick__card_design_image">
               <img src={item?.image?.url} alt={item?.image?.alt} />
             </div>

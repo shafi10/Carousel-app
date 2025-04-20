@@ -31,7 +31,7 @@ export const queryDataWithVariables = async (res, query, variables) => {
     });
     return response;
   } catch (error) {
-    console.error("error", error);
+    console.log("🚀 ~ queryDataWithVariables ~ error:", error);
     return error;
   }
 };

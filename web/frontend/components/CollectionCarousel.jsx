@@ -14,10 +14,11 @@ import useQuery from "../hooks/useQuery";
 import { PaginationButtons } from "./common/Pagination";
 import { SortableItem } from "./SortableItem";
 import Skeleton from "./common/Skeleton";
-import { templates } from "../utils/template";
+import { accessComponentType, getPlanType, templates } from "../utils/template";
 import useCreate from "../hooks/useCreate";
 import RadioButtonList from "./common/RadioButton";
 import { Spinners } from "./Spinner";
+import useFetchQuery from "../hooks/useQuery";
 
 // Define a fallback loader
 const LoaderSkeleton = () => <Skeleton lines={15} />;
@@ -52,6 +53,7 @@ export default function CollectionCarousel() {
     label: "Free Mode",
   });
   const [selectedItems, setSelectedItems] = useState([]);
+  // const [allowedTemplateIds, setAllowedTemplateIds] = useState([]);
   const [searchParams, setSearchParams] = useState({ after: "" });
   const afterCursor = searchParams?.after;
   const beforeCursor = searchParams?.before;
@@ -73,6 +75,15 @@ export default function CollectionCarousel() {
     apiKey: "collectionList",
     dependency: [afterCursor, beforeCursor, limit],
   });
+
+  const { isLoading: isBillingLoading, data: activeAppBilling } = useFetchQuery(
+    {
+      apiEndpoint: "/api/pricing/active-subscriptions",
+      apiKey: "activeSubscription",
+      dependency: [],
+    }
+  );
+  console.log("🚀 ~ CollectionCarousel ~ activeAppBilling:", activeAppBilling);
 
   const {
     mutate: createCollections,
@@ -134,6 +145,13 @@ export default function CollectionCarousel() {
 
   // Get the selected component based on the current template ID
   const SelectedComponent = componentMap[selectedPreview?.id];
+
+  const planType = getPlanType(activeAppBilling?.activeSubscription);
+  const allowedTemplateIds = accessComponentType(planType) ?? [];
+  console.log(
+    "🚀 ~ CollectionCarousel ~ allowedTemplateIds:",
+    allowedTemplateIds
+  );
 
   return (
     <Card>
@@ -247,6 +265,7 @@ export default function CollectionCarousel() {
                               setSelectedTemplate={setSelectedTemplate}
                               selectedTemplate={selectedTemplate}
                               windowType="desktop"
+                              allowedTemplateIds={allowedTemplateIds || []}
                             />
                           </Card>
                           <Card>
@@ -258,6 +277,7 @@ export default function CollectionCarousel() {
                               setSelectedTemplate={setSelectedTemplate}
                               selectedTemplate={selectedTemplate}
                               windowType="mobile"
+                              allowedTemplateIds={allowedTemplateIds || []}
                             />
                           </Card>
                         </InlineGrid>

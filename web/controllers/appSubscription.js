@@ -1,4 +1,8 @@
-import { subscriptionCancel, activeSubscription } from "../utils/query.js";
+import {
+  subscriptionCancel,
+  activeSubscription,
+  subscriptionCreate,
+} from "../utils/query.js";
 import { queryDataWithVariables, getQueryData } from "../utils/getQueryData.js";
 
 export const getActiveSubscription = async (req, res) => {
@@ -19,7 +23,7 @@ export const getActiveSubscription = async (req, res) => {
     }
     res.status(200).json({
       activeSubscription:
-        appSubscription.body.data?.appInstallation.activeSubscriptions,
+        appSubscription.body.data?.appInstallation.activeSubscriptions?.[0],
       message: "Success",
     });
   } catch (error) {
@@ -33,13 +37,9 @@ export const getActiveSubscription = async (req, res) => {
 export const createAppSubscription = async (req, res, next) => {
   try {
     const subsData = req.body;
-    const shopURL = "quick-start-v2.myshopify.com";
-
     let variables = {
       name: subsData?.name,
-      returnUrl: `${shopURL}/admin/apps/${process.env.SHOPIFY_API_KEY}`,
-      trialDays: subsData?.trialDays,
-      test: true,
+      returnUrl: `https://${res.locals.shopify.session?.shop}/admin/apps/${process.env.SHOPIFY_API_KEY}`,
       lineItems: [
         {
           plan: {
@@ -53,14 +53,11 @@ export const createAppSubscription = async (req, res, next) => {
           },
         },
       ],
+      test: true,
+      trialDays: subsData?.trialDays,
     };
-
-    const appSubscription = await queryDataWithVariables(
-      res,
-      subscriptionCreate,
-      variables
-    );
-
+    const query = subscriptionCreate();
+    const appSubscription = await queryDataWithVariables(res, query, variables);
     if (appSubscription?.errors) {
       return res.status(400).json({
         errors: appSubscription.errors,
@@ -75,10 +72,11 @@ export const createAppSubscription = async (req, res, next) => {
       });
     }
     res.status(200).json({
-      metafieldData: appSubscription.body.data?.appSubscriptionCreate,
+      appSubscription: appSubscription.body.data?.appSubscriptionCreate,
       message: "Success",
     });
   } catch (error) {
+    console.log("🚀 ~ createAppSubscription ~ error:", error);
     return res.status(400).json({
       error: error,
     });

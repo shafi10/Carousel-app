@@ -19,9 +19,10 @@ const useCreate = (apiEndpoint, apiKey) => {
   return useMutation((status) => createStatus(status), {
     onSuccess: async (data, obj) => {
       if (data?.status === 400) {
+        const error = data?.json();
         return setToggleToast({
           active: true,
-          message: `Something went wrong`,
+          message: error?.error?.message || `Something went wrong`,
         });
       }
       queryClient.invalidateQueries(apiKey);
@@ -31,10 +32,11 @@ const useCreate = (apiEndpoint, apiKey) => {
         message: `Submit Successfully`,
       });
     },
-    onError: async () => {
-      setToggleToast({
+    onError: async (errors) => {
+      const error = errors?.json();
+      return setToggleToast({
         active: true,
-        message: `Something went wrong`,
+        message: error?.error?.message || `Something went wrong`,
       });
     },
     refetchOnWindowFocus: false,

@@ -97,8 +97,8 @@ export const collectionQuery = (variables) => {
 };
 
 export const subscriptionCreate = () => {
-  return `mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
-    appSubscriptionCreate(name: $name, returnUrl: $returnUrl, lineItems: $lineItems) {
+  return `mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!, $test: Boolean, $trialDays: Int ) {
+    appSubscriptionCreate(name: $name, returnUrl: $returnUrl, lineItems: $lineItems, test: $test, trialDays: $trialDays) {
       userErrors {
         field
         message
