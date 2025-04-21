@@ -85,17 +85,13 @@ export const createAppSubscription = async (req, res, next) => {
 
 export const cancelAppSubscription = async (req, res, next) => {
   try {
-    const subsData = req?.params?.id;
+    const subsData = req?.body?.priceId;
 
     let variables = {
       id: subsData,
     };
-
-    const appSubscription = await queryDataWithVariables(
-      res,
-      subscriptionCancel,
-      variables
-    );
+    const query = subscriptionCancel();
+    const appSubscription = await queryDataWithVariables(res, query, variables);
 
     if (appSubscription?.errors) {
       return res.status(400).json({
@@ -108,6 +104,10 @@ export const cancelAppSubscription = async (req, res, next) => {
       return res.status(400).json({
         errors:
           appSubscription.body.data?.appSubscriptionCancel?.userErrors?.[0],
+      });
+    } else if (appSubscription?.response?.body?.errors) {
+      return res.status(400).json({
+        errors: appSubscription?.response?.body?.errors?.query,
       });
     }
     res.status(200).json({

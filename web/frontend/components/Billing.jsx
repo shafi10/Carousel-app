@@ -6,11 +6,14 @@ import {
   BlockStack,
   Grid,
   Button,
-  Form,
+  InlineStack,
 } from "@shopify/polaris";
 import useFetchQuery from "../hooks/useQuery";
 import { pricingPlan } from "../utils/template";
 import useCreate from "../hooks/useCreate";
+import useCancelBilling from "../hooks/useCreate";
+import { formatReadableDates } from "../../utils/dateConvert";
+import { Spinners } from "./Spinner";
 
 export default function Billing() {
   const { isLoading, data } = useFetchQuery({
@@ -24,6 +27,9 @@ export default function Billing() {
     isError: isErrorForBulk,
     isLoading: isCreateLoading,
   } = useCreate("/api/pricing/app-billing-create", "activeSubscription");
+
+  const { mutate: cancelSubscription, isLoading: isCancelLoading } =
+    useCancelBilling("/api/pricing/app-billing-cancel", "activeSubscription");
 
   console.log("🚀 ~ Subscription ~ data:", data);
 
@@ -50,38 +56,69 @@ export default function Billing() {
         <Layout>
           <Layout.Section secondary>
             <Card>
-              <BlockStack gap="2">
+              <BlockStack gap="200">
                 <Text as="h2" variant="headingMd">
                   Your Current Plan
                 </Text>
                 {data?.activeSubscription?.status === "ACTIVE" ? (
-                  <>
-                    <Text as="h6" variant="headingXs">
-                      Name: {data?.activeSubscription?.name}
-                    </Text>
-                    <Text as="p" variant="bodyMd">
-                      Status: {data?.activeSubscription?.status}
-                    </Text>
-                    <Text as="p" variant="bodyMd">
-                      Activated On: {data?.activeSubscription?.activated_on}
-                    </Text>
-                    <Text as="p" variant="bodyMd">
-                      Expiration date:{" "}
-                      {/* {addDaysToDate(
-                      data?.activeSubscription?.activated_on, 30)} */}
-                    </Text>{" "}
-                    <Button
-                      onClick={() =>
-                        handleCancel({
-                          isCancel: true,
-                          priceId: data?.activeSubscription?.id,
-                        })
-                      }
-                      primary
+                  <Grid>
+                    <Grid.Cell
+                      columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
                     >
-                      Cancel
-                    </Button>
-                  </>
+                      <Card>
+                        <BlockStack gap="200">
+                          <Text as="h6" variant="headingXs">
+                            Name: {data?.activeSubscription?.name}
+                          </Text>
+                          <Text as="p" variant="bodyMd">
+                            Activated On:{" "}
+                            {formatReadableDates(
+                              data?.activeSubscription?.createdAt
+                            )}
+                          </Text>
+                          <Text as="p" variant="bodyMd">
+                            Expiration date:{" "}
+                            {formatReadableDates(
+                              data?.activeSubscription?.currentPeriodEnd
+                            )}
+                          </Text>{" "}
+                          <Text>
+                            <Button
+                              onClick={() =>
+                                cancelSubscription({
+                                  priceId: data?.activeSubscription?.id,
+                                })
+                              }
+                              variant="primary"
+                              tone="critical"
+                            >
+                              {isCancelLoading ? <Spinners /> : "Cancel"}
+                            </Button>
+                          </Text>
+                        </BlockStack>
+                      </Card>
+                    </Grid.Cell>
+                    <Grid.Cell
+                      columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                    >
+                      <Card>
+                        <BlockStack gap="200">
+                          <Text variant="headingLg" as="h5">
+                            Features
+                          </Text>
+                          <BlockStack gap="200">
+                            {pricingPlan.map((item) =>
+                              item.name === data?.activeSubscription?.name ? (
+                                item?.feature.map((itm) => <Text>{itm}</Text>)
+                              ) : (
+                                <></>
+                              )
+                            )}
+                          </BlockStack>
+                        </BlockStack>
+                      </Card>
+                    </Grid.Cell>
+                  </Grid>
                 ) : (
                   <Text as="h6" variant="headingXs">
                     Name: Free Plan
@@ -97,27 +134,27 @@ export default function Billing() {
                   Select your plan
                 </Text>
                 <Grid>
-                  {pricingPlan.map((data) => (
+                  {pricingPlan.map((item) => (
                     <Grid.Cell
                       columnSpan={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 4 }}
                     >
                       <Card sectioned>
                         <Text variant="headingLg" as="h5" alignment="left">
-                          {data?.name}
+                          {item?.name}
                         </Text>
                         <BlockStack gap="200" align="center">
                           <Text as="h2" variant="headingMd" alignment="center">
-                            ${data?.amount}
+                            ${item?.amount}
                             <Text as="p" variant="bodyMd" alignment="center">
-                              Free trial {data?.trialDays} days
+                              Free trial {item?.trialDays} days
                             </Text>
                             <Text as="p" variant="bodyMd" alignment="center">
-                              {data?.interval === "EVERY_30_DAYS"
+                              {item?.interval === "EVERY_30_DAYS"
                                 ? "After Every 30 Days"
-                                : data?.interval}
+                                : item?.interval}
                             </Text>
                           </Text>
-                          {data?.feature.map((item) => (
+                          {item?.feature.map((item) => (
                             <Text as="p" variant="bodyMd" alignment="center">
                               {item}
                             </Text>
@@ -125,10 +162,13 @@ export default function Billing() {
                           <Button
                             variant="primary"
                             textAlign="center"
-                            onClick={() => handleSubmit(data)}
-                            disabled={data?.name == "Free"}
+                            onClick={() => handleSubmit(item)}
+                            disabled={
+                              item?.name == "Free" ||
+                              data?.activeSubscription?.status === "ACTIVE"
+                            }
                           >
-                            {data?.buttonTitle}
+                            {item?.buttonTitle}
                           </Button>
                         </BlockStack>
                       </Card>
